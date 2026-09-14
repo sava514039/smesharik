@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рандомайзер</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* Фон: твоя картинка + полупрозрачный белый градиент поверх, чтобы текст читался */
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
+        url('bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: #333;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 90%;
+      padding: 40px 30px;
+      /* Полупрозрачная подложка для лучшей читаемости */
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: #2e7d32;
+      text-shadow: 0 2px 4px rgba(255,255,255,0.7);
+    }
+
+    .subtitle {
+      margin-bottom: 30px;
+      color: #546e7a;
+      font-size: 1rem;
+    }
+
+    .btn {
+      padding: 14px 40px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 30px;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(76, 175, 80, 0.4);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .results {
+      display: none;
+      text-align: left;
+    }
+
+    .result-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      border-left: 4px solid #4caf50;
+      animation: fadeIn 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    /* Анимация появления строк */
+    .result-row:nth-child(1) { animation-delay: 0.1s; }
+    .result-row:nth-child(2) { animation-delay: 0.2s; }
+    .result-row:nth-child(3) { animation-delay: 0.3s; }
+    .result-row:nth-child(4) { animation-delay: 0.4s; }
+    .result-row:nth-child(5) { animation-delay: 0.5s; }
+    .result-row:nth-child(6) { animation-delay: 0.6s; }
+    .result-row:nth-child(7) { animation-delay: 0.7s; }
+    .result-row:nth-child(8) { animation-delay: 0.8s; }
+    .result-row:nth-child(9) { animation-delay: 0.9s; }
+    .result-row:nth-child(10) { animation-delay: 1.0s; }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .num {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #ffeb3b;
+      min-width: 40px;
+    }
+
+    .name {
+      flex: 1;
+      font-size: 1.05rem;
+      margin-left: 12px;
+      color: #263238;
+    }
+
+    .prize {
+      font-size: 1rem;
+      color: #2e7d32;
+      font-weight: 600;
+    }
+
+    .hint {
+      margin-top: 20px;
+      color: #78909c;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎲 Рандомайзер</h1>
+    <p class="subtitle">Нажми кнопку, чтобы разыграть варианты между участниками</p>
+
+    <button class="btn" onclick="runRandomizer()">Разыграть!</button>
+
+    <div class="results" id="results"></div>
+
+    <p class="hint">Результаты генерируются случайно. Обнови страницу, чтобы запустить заново.</p>
+  </div>
+
+  <script>
+    // === ДАННЫЕ — РЕДАКТИРУЙ ПОД СЕБЯ ===
+    const people = [
+      "Маша", "Юля", "Ксюша Ч", "Даша",
+      "Ксюша Н", "Настя"
+    ];
+
+    const prizes = [
+      "Нюша",
+      "Крош",
+      "Ёжик",
+      "Савунья",
+"Копатыч",
+"Каркарыч",
+"Пин",
+"Бараш",
+"Лосяш",
+    ];
+
+    // === ЛОГИКА РАНДОМАЙЗЕРА ===
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function runRandomizer() {
+      const shuffledPrizes = shuffle(prizes);
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+      resultsDiv.style.display = "block";
+
+      people.forEach((name, i) => {
+        const prize = shuffledPrizes[i % shuffledPrizes.length];
+        const row = document.createElement("div");
+        row.className = "result-row";
+        row.innerHTML = `
+          <span class="num">${i + 1}</span>
+          <span class="name">${name}</span>
+          <span class="prize">${prize}</span>
+        `;
+        resultsDiv.appendChild(row);
+      });
+    }
+  </script>
+
+</body>
+</html>
