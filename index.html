@@ -8,417 +8,240 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
-        url('bg.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background-color: #f0f4f8;
       color: #333;
     }
 
     .container {
-      max-width: 600px;
+      max-width: 450px;
       width: 90%;
-      padding: 50px 35px;
-      background: rgba(255, 255, 255, 0.92);
-      border-radius: 22px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       text-align: center;
     }
 
     h1 {
       margin: 0 0 10px;
-      font-size: 2rem;
-      color: #2e7d32;
+      font-size: 1.8rem;
+      color: #2c3e50;
+      line-height: 1.2;
+    }
+
+    h1 span {
+      color: #e67e22; /* Оранжевый цвет для акцента */
     }
 
     .subtitle {
       margin-bottom: 30px;
-      color: #546e7a;
-      font-size: 1rem;
+      color: #7f8c8d;
+      font-size: 0.95rem;
     }
 
     .btn {
-      padding: 14px 44px;
-      font-size: 1.15rem;
-      border: none;
-      border-radius: 12px;
-      background: #4caf50;
+      padding: 16px 40px;
+      font-size: 1.1rem;
+      background-color: #3498db;
       color: white;
+      border: none;
+      border-radius: 50px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
     }
 
     .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(76, 175, 80, 0.4);
+      background-color: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
     }
 
     .btn:disabled {
-      background: #bbb;
+      background-color: #bdc3c7;
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
     }
 
-    .result {
+    .loading {
+      margin-top: 20px;
+      color: #3498db;
+      font-weight: bold;
       display: none;
+    }
+
+    .error {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #ffebee;
+      color: #c62828;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .result-box {
       margin-top: 30px;
-      padding: 30px;
-      background: linear-gradient(135deg, #e8f5e9, #fffde7);
-      border-radius: 16px;
+      padding: 25px;
+      background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
       border: 2px solid #4caf50;
+      border-radius: 15px;
+      display: none;
       animation: popIn 0.5s ease forwards;
     }
 
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
     .result-label {
-      font-size: 1rem;
-      color: #546e7a;
-      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .result-character {
       font-size: 2.2rem;
       font-weight: bold;
       color: #2e7d32;
-      margin: 5px 0;
+      margin: 10px 0;
     }
 
     .result-num {
       font-size: 0.9rem;
-      color: #888;
-      margin-top: 10px;
+      color: #666;
     }
 
-    .loading {
-      display: none;
-      margin-top: 20px;
-      color: #78909c;
-      font-size: 0.95rem;
-    }
-
-    .error {
-      display: none;
+    /* Стили для админ-кнопки */
+    .admin-panel {
       margin-top: 25px;
-      padding: 20px;
-      background: #fff3e0;
-      border-radius: 12px;
-      border-left: 4px solid #ff9800;
-      color: #e65100;
-      font-size: 1rem;
+      padding-top: 15px;
+      border-top: 1px dashed #ccc;
     }
 
-    .hint {
-      margin-top: 25px;
-      color: #90a4ae;
-      font-size: 0.8rem;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="container">
-    <h1>Какой ты смешнарик</h1>
-    <p class="subtitle">Нажми кнопку, чтобы узнать своего персонажа</p>
-
-    <button class="btn" id="drawBtn" onclick="drawCharacter()">Мне выпадет…</button>
-
-    <div class="loading" id="loading">Подбираем персонажа…</div>
-
-    <div class="result" id="result">
-      <p class="result-label">Тебе достался:</p>
-      <div class="result-character" id="characterName">—</div>
-      <div class="result-num" id="resultNum"></div>
-    </div>
-
-    <div class="error" id="error"></div>
-
-    <p class="hint">Персонажи распределяются случайным образом и не повторяются.</p>
-  </div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <script>
-    // === ВСТАВЬ СВОЙ КОНФИГ ИЗ FIREBASE ===
-    const firebaseConfig = {
-  apiKey: "AIzaSyAe3TZyDMG4JvS_ccGy3VxduQgCEpCTDA8",
-  authDomain: "smesharik-857ae.firebaseapp.com",
-  projectId: "smesharik-857ae",
-  storageBucket: "smesharik-857ae.firebasestorage.app",
-  messagingSenderId: "165009269489",
-  appId: "1:165009269489:web:d9d443311515451826bf50"
-};
-
-
-    // Инициализация Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // === НАСТРОЙКИ ===
-    const characters = [
-      "Крош", "Ёжик", "Нюша", "Бараш",
-      "Лосяш", "Пин", "Копатыч", "Совунья", "Кар-Карыч"
-    ];
-
-    const maxPeople = 6; // сколько человек могут получить персонажа
-
-    // === ЛОГИКА ===
-    let alreadyAssigned = false;
-
-    // Проверяем при загрузке, не получал ли этот браузер уже персонажа
-    window.addEventListener('load', () => {
-      const saved = localStorage.getItem('santa_assigned');
-      if (saved) {
-        const data = JSON.parse(saved);
-        showResult(data.character, data.num);
-        alreadyAssigned = true;<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Тайный Санта</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
-        url('bg.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      color: #333;
-    }
-
-    .container {
-      max-width: 600px;
-      width: 90%;
-      padding: 50px 35px;
-      background: rgba(255, 255, 255, 0.92);
-      border-radius: 22px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: 2rem;
-      color: #2e7d32;
-    }
-
-    .subtitle {
-      margin-bottom: 30px;
-      color: #546e7a;
-      font-size: 1rem;
-    }
-
-    .btn {
-      padding: 14px 44px;
-      font-size: 1.15rem;
-      border: none;
-      border-radius: 12px;
-      background: #4caf50;
-      color: white;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(76, 175, 80, 0.4);
-    }
-
-    .btn:disabled {
-      background: #bbb;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .result {
-      display: none;
-      margin-top: 30px;
-      padding: 30px;
-      background: linear-gradient(135deg, #e8f5e9, #fffde7);
-      border-radius: 16px;
-      border: 2px solid #4caf50;
-      animation: popIn 0.5s ease forwards;
-    }
-
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .result-label {
-      font-size: 1rem;
-      color: #546e7a;
-      margin-bottom: 8px;
-    }
-
-    .result-character {
-      font-size: 2.2rem;
-      font-weight: bold;
-      color: #2e7d32;
-      margin: 5px 0;
-    }
-
-    .result-num {
-      font-size: 0.9rem;
-      color: #888;
-      margin-top: 10px;
-    }
-
-    .loading {
-      display: none;
-      margin-top: 20px;
-      color: #78909c;
-      font-size: 0.95rem;
-    }
-
-    .error {
-      display: none;
-      margin-top: 25px;
-      padding: 20px;
-      background: #fff3e0;
-      border-radius: 12px;
-      border-left: 4px solid #ff9800;
-      color: #e65100;
-      font-size: 1rem;
-    }
-
-    .hint {
-      margin-top: 25px;
-      color: #90a4ae;
-      font-size: 0.8rem;
-    }
-
-    /* === СТИЛЬ КНОПКИ СБРОСА === */
     .admin-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #ff5252;
+      background-color: #e74c3c;
       color: white;
       border: none;
+      padding: 10px 20px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 0.95rem;
-      transition: transform 0.2s;
+      font-size: 0.9rem;
+      transition: background 0.2s;
     }
 
     .admin-btn:hover {
-      transform: scale(1.03);
+      background-color: #c0392b;
+    }
+
+    .hint {
+      margin-top: 25px;
+      font-size: 0.8rem;
+      color: #95a5a6;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Какой ты смешнарик</h1>
+    <h1>Какой ты <span>смешнарик</span></h1>
     <p class="subtitle">Нажми кнопку, чтобы узнать своего персонажа</p>
 
     <button class="btn" id="drawBtn" onclick="drawCharacter()">Мне выпадет…</button>
 
-    <div class="loading" id="loading">Подбираем персонажа…</div>
-
-    <div class="result" id="result">
-      <p class="result-label">Тебе достался:</p>
-      <div class="result-character" id="characterName">—</div>
-      <div class="result-num" id="resultNum"></div>
-    </div>
-
+    <div class="loading" id="loading">Подбираем идеального смешнарика… 🎲</div>
     <div class="error" id="error"></div>
 
-    <p class="hint">Персонажи распределяются случайным образом и не повторяются.</p>
+    <div class="result-box" id="result">
+      <div class="result-label">Тебе достался:</div>
+      <div class="result-character" id="charName">—</div>
+      <div class="result-num" id="charNum">—</div>
+    </div>
 
-    <!-- Здесь появится кнопка сброса, если зайти по ссылке с ?admin=... -->
-    <div id="adminPanel"></div>
+    <!-- Сюда JS добавит кнопку сброса, если ты админ -->
+    <div class="admin-panel" id="adminPanel"></div>
+
+    <p class="hint">Персонажи распределяются случайно и не повторяются. Данные хранятся в базе.</p>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- Подключаем Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    // === ВСТАВЬ СВОЙ КОНФИГ ИЗ FIREBASE ===
+    // ================= НАСТРОЙКИ =================
+    
+    // 1. ВСТАВЬ СЮДА СВОИ КЛЮЧИ ИЗ FIREBASE CONSOLE
     const firebaseConfig = {
-  apiKey: "AIzaSyAe3TZyDMG4JvS_ccGy3VxduQgCEpCTDA8",
-  authDomain: "smesharik-857ae.firebaseapp.com",
-  projectId: "smesharik-857ae",
-  storageBucket: "smesharik-857ae.firebasestorage.app",
-  messagingSenderId: "165009269489",
-  appId: "1:165009269489:web:1cbace823b7fe7ed26bf50"
-};
+      apiKey: "AIzaSy...ВСТАВЬ_СЮДА...",
+      authDomain: "secret-santa-...firebaseapp.com",
+      databaseURL: "https://secret-santa-...-default-rtdb.firebaseio.com",
+      projectId: "secret-santa-...",
+      storageBucket: "secret-santa-...appspot.com",
+      messagingSenderId: "...",
+      appId: "..."
+    };
 
-    // Инициализация Firebase
-    firebase.initializeApp(firebaseConfig);
+    // 2. ПРИДУМАЙ СВОЙ ПАРОЛЬ ДЛЯ ДОСТУПА К КНОПКЕ СБРОСА
+    // Чтобы увидеть кнопку, открой ссылку: .../index.html?admin=ТВОЙ_ПАРОЛЬ
+    const ADMIN_CODE = "Code123"; 
+
+    // Список персонажей
+    const characters = ["Крош", "Ёжик", "Нюша", "Бараш", "Лосяш", "Пин", "Копатыч", "Совунья", "Кар-Карыч"];
+    const maxPeople = 6; // Лимит участников
+
+    // ================= ИНИЦИАЛИЗАЦИЯ =================
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.database();
-
-    // === НАСТРОЙКИ ===
-    const characters = [
-      "Крош", "Ёжик", "Нюша", "Бараш",
-      "Лосяш", "Пин", "Копатыч", "Совунья", "Кар-Карыч"
-    ];
-
-    const maxPeople = 6; // сколько человек могут получить персонажа
-
-    // === СЕКРЕТНЫЙ КОД ДЛЯ СБРОСА — ПОМЕНЯЙ НА СВОЙ ===
-    const ADMIN_CODE = "mySecretReset2024";
-
-    // === ЛОГИКА ===
     let alreadyAssigned = false;
 
-    // Проверяем при загрузке, не получал ли этот браузер уже персонажа
+    // ================= ЗАГРУЗКА СТРАНИЦЫ =================
     window.addEventListener('load', () => {
+      // Проверяем, не получал ли уже персонаж в этом браузере
       const saved = localStorage.getItem('santa_assigned');
       if (saved) {
         const data = JSON.parse(saved);
         showResult(data.character, data.num);
         alreadyAssigned = true;
-        document.getElementById('drawBtn').disabled = true;
-        document.getElementById('drawBtn').textContent = 'Ты уже получил персонажа';
+        const btn = document.getElementById('drawBtn');
+        btn.disabled = true;
+        btn.textContent = "Ты уже получил персонажа";
       }
 
-      // === ПРОВЕРКА АДМИН-РЕЖИМА ===
+      // ПРОВЕРКА АДМИН-РЕЖИМА
       const urlParams = new URLSearchParams(window.location.search);
       const isAdmin = urlParams.get('admin') === ADMIN_CODE;
 
       if (isAdmin) {
-        // Создаём кнопку сброса
         const adminBtn = document.createElement('button');
         adminBtn.className = 'admin-btn';
         adminBtn.textContent = '🗑️ СБРОСИТЬ ВСЕ РЕЗУЛЬТАТЫ';
-
+        
         adminBtn.onclick = () => {
-          if (!confirm('Точно сбросить все результаты? Это нельзя отменить!')) return;
-
+          if (!confirm('⚠️ ЭТО НЕЛЬЗЯ ОТМЕНИТЬ!\nТы точно хочешь удалить все результаты розыгрыша?')) {
+            return;
+          }
+          
           db.ref('assignments').remove()
             .then(() => {
-              alert('✅ База очищена! Можно начинать заново.');
-              // Очищаем localStorage у себя, чтобы кнопка розыгрыша снова работала
+              alert('✅ База очищена! Теперь можно начинать новый розыгрыш.');
+              // Очищаем локальное хранилище у себя, чтобы кнопка снова работала
               localStorage.removeItem('santa_assigned');
-              location.reload();
+              location.reload(); // Перезагружаем страницу
             })
             .catch(err => {
-              alert('❌ Ошибка: ' + err.message);
+              alert('❌ Ошибка при удалении: ' + err.message);
             });
         };
 
@@ -426,18 +249,18 @@
       }
     });
 
+    // ================= ФУНКЦИИ =================
     function showResult(character, num) {
-      document.getElementById('loading').style.display = 'none';
       document.getElementById('result').style.display = 'block';
-      document.getElementById('characterName').textContent = character;
-      document.getElementById('resultNum').textContent =
-        `Ты — человек №${num} из ${maxPeople}`;
+      document.getElementById('charName').textContent = character;
+      document.getElementById('charNum').textContent = `Ты — человек №${num} из ${maxPeople}`;
+      document.getElementById('loading').style.display = 'none';
     }
 
     function showError(msg) {
-      document.getElementById('loading').style.display = 'none';
       document.getElementById('error').style.display = 'block';
       document.getElementById('error').textContent = msg;
+      document.getElementById('loading').style.display = 'none';
     }
 
     function drawCharacter() {
@@ -446,17 +269,18 @@
       const btn = document.getElementById('drawBtn');
       btn.disabled = true;
       document.getElementById('loading').style.display = 'block';
+      document.getElementById('error').style.display = 'none';
 
-      // Читаем текущее состояние из базы
+      // Транзакция для безопасного выбора персонажа
       db.ref('assignments').transaction((data) => {
         if (data === null) data = { count: 0, taken: {} };
 
-        // Проверяем, не все ли места заняты
+        // Проверка лимита
         if (data.count >= maxPeople) {
-          return; // отменяем транзакцию
+          return; // Отменяем транзакцию, мест нет
         }
 
-        // Собираем занятые персонажи
+        // Сбор занятых имен
         const takenChars = [];
         if (data.taken) {
           for (const key in data.taken) {
@@ -464,147 +288,41 @@
           }
         }
 
-        // Находим свободных
+        // Поиск свободных
         const available = characters.filter(c => !takenChars.includes(c));
-        if (available.length === 0) {
-          return; // нечего раздавать
-        }
+        if (available.length === 0) return;
 
-        // Выбираем случайного
+        // Выбор случайного
         const randomIndex = Math.floor(Math.random() * available.length);
         const chosen = available[randomIndex];
-
-        // Записываем в базу
         const newCount = data.count + 1;
-        const newKey = 'p' + newCount;
-        if (!data.taken) data.taken = {};
-        data.taken[newKey] = chosen;
+
+        // Запись в базу
+        data.taken['p' + newCount] = chosen;
         data.count = newCount;
 
-        // Сохраняем локально
+        // Сохранение локально
         localStorage.setItem('santa_assigned', JSON.stringify({
           character: chosen,
           num: newCount
         }));
 
-        // Показываем результат
         showResult(chosen, newCount);
-        document.getElementById('drawBtn').textContent = 'Готово!';
-
-        return data; // коммитим транзакцию
-      }).then((result) => {
-        if (!result.committed) {
-          db.ref('assignments/count').once('value').then((snap) => {
-            const count = snap.val() || 0;
-            if (count >= maxPeople) {
-              showError('Увы, все места уже заняты! 🙁');
-            } else {
-              showError('Что-то пошло не так. Попробуй обновить страницу и нажать ещё раз.');
-            }
-            btn.disabled = false;
-          });
+        btn.textContent = "Готово! 🎉";
+        
+        return data;
+      }, (error, committed, snapshot) => {
+        document.getElementById('loading').style.display = 'none';
+        if (!committed) {
+          // Если транзакция не прошла (кто-то другой занял место одновременно)
+          showError('Что-то пошло не так. Попробуй нажать ещё раз.');
+          btn.disabled = false;
+        } else if (error) {
+          showError('Ошибка соединения с базой данных.');
+          btn.disabled = false;
         }
-      }).catch((err) => {
-        showError('Ошибка соединения. Проверь интернет и попробуй снова.');
-        btn.disabled = false;
       });
     }
   </script>
-
-</body>
-</html>
-
-        document.getElementById('drawBtn').disabled = true;
-        document.getElementById('drawBtn').textContent = 'Ты уже получил персонажа';
-      }
-    });
-
-    function showResult(character, num) {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('result').style.display = 'block';
-      document.getElementById('characterName').textContent = character;
-      document.getElementById('resultNum').textContent =
-        `Ты — человек №${num} из ${maxPeople}`;
-    }
-
-    function showError(msg) {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('error').style.display = 'block';
-      document.getElementById('error').textContent = msg;
-    }
-
-    function drawCharacter() {
-      if (alreadyAssigned) return;
-
-      const btn = document.getElementById('drawBtn');
-      btn.disabled = true;
-      document.getElementById('loading').style.display = 'block';
-
-      // Читаем текущее состояние из базы
-      db.ref('assignments').transaction((data) => {
-        if (data === null) data = { count: 0, taken: {} };
-
-        // Проверяем, не все ли места заняты
-        if (data.count >= maxPeople) {
-          return; // отменяем транзакцию — вернёт текущие данные
-        }
-
-        // Собираем занятые персонажи
-        const takenChars = [];
-        if (data.taken) {
-          for (const key in data.taken) {
-            takenChars.push(data.taken[key]);
-          }
-        }
-
-        // Находим свободных
-        const available = characters.filter(c => !takenChars.includes(c));
-        if (available.length === 0) {
-          return; // нечего раздавать
-        }
-
-        // Выбираем случайного
-        const randomIndex = Math.floor(Math.random() * available.length);
-        const chosen = available[randomIndex];
-
-        // Записываем в базу
-        const newCount = data.count + 1;
-        const newKey = 'p' + newCount;
-        if (!data.taken) data.taken = {};
-        data.taken[newKey] = chosen;
-        data.count = newCount;
-
-        // Сохраняем локально, чтобы при обновлении страницы
-        // человек видел того же персонажа
-        localStorage.setItem('santa_assigned', JSON.stringify({
-          character: chosen,
-          num: newCount
-        }));
-
-        // Показываем результат
-        showResult(chosen, newCount);
-        document.getElementById('drawBtn').textContent = 'Готово!';
-
-        return data; // коммитим транзакцию
-      }).then((result) => {
-        if (!result.committed) {
-          // Транзакция не закоммичена — значит, мест больше нет
-          db.ref('assignments/count').once('value').then((snap) => {
-            const count = snap.val() || 0;
-            if (count >= maxPeople) {
-              showError('Увы, все места уже заняты! 🙁');
-            } else {
-              showError('Что-то пошло не так. Попробуй обновить страницу и нажать ещё раз.');
-            }
-            btn.disabled = false;
-          });
-        }
-      }).catch((err) => {
-        showError('Ошибка соединения. Проверь интернет и попробуй снова.');
-        btn.disabled = false;
-      });
-    }
-  </script>
-
 </body>
 </html>
