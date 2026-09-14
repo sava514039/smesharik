@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Рандомайзер</title>
+  <title>Тайный Санта</title>
   <style>
     body {
       margin: 0;
@@ -13,9 +13,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
-      /* Фон: твоя картинка + полупрозрачный белый градиент поверх, чтобы текст читался */
-      background-image: 
+      background-image:
         linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
         url('bg.jpg');
       background-size: cover;
@@ -25,12 +23,11 @@
     }
 
     .container {
-      max-width: 700px;
+      max-width: 600px;
       width: 90%;
-      padding: 40px 30px;
-      /* Полупрозрачная подложка для лучшей читаемости */
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
+      padding: 50px 35px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 22px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
       text-align: center;
     }
@@ -38,9 +35,7 @@
     h1 {
       margin: 0 0 10px;
       font-size: 2rem;
-      letter-spacing: 1px;
       color: #2e7d32;
-      text-shadow: 0 2px 4px rgba(255,255,255,0.7);
     }
 
     .subtitle {
@@ -50,15 +45,14 @@
     }
 
     .btn {
-      padding: 14px 40px;
-      font-size: 1.1rem;
+      padding: 14px 44px;
+      font-size: 1.15rem;
       border: none;
       border-radius: 12px;
       background: #4caf50;
       color: white;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
-      margin-bottom: 30px;
     }
 
     .btn:hover {
@@ -66,129 +60,219 @@
       box-shadow: 0 0 25px rgba(76, 175, 80, 0.4);
     }
 
-    .btn:active {
-      transform: scale(0.97);
+    .btn:disabled {
+      background: #bbb;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
-    .results {
+    .result {
       display: none;
-      text-align: left;
+      margin-top: 30px;
+      padding: 30px;
+      background: linear-gradient(135deg, #e8f5e9, #fffde7);
+      border-radius: 16px;
+      border: 2px solid #4caf50;
+      animation: popIn 0.5s ease forwards;
     }
 
-    .result-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 18px;
-      margin-bottom: 8px;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 10px;
-      border-left: 4px solid #4caf50;
-      animation: fadeIn 0.4s ease forwards;
-      opacity: 0;
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
     }
 
-    /* Анимация появления строк */
-    .result-row:nth-child(1) { animation-delay: 0.1s; }
-    .result-row:nth-child(2) { animation-delay: 0.2s; }
-    .result-row:nth-child(3) { animation-delay: 0.3s; }
-    .result-row:nth-child(4) { animation-delay: 0.4s; }
-    .result-row:nth-child(5) { animation-delay: 0.5s; }
-    .result-row:nth-child(6) { animation-delay: 0.6s; }
-    .result-row:nth-child(7) { animation-delay: 0.7s; }
-    .result-row:nth-child(8) { animation-delay: 0.8s; }
-    .result-row:nth-child(9) { animation-delay: 0.9s; }
-    .result-row:nth-child(10) { animation-delay: 1.0s; }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
-    .num {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #ffeb3b;
-      min-width: 40px;
-    }
-
-    .name {
-      flex: 1;
-      font-size: 1.05rem;
-      margin-left: 12px;
-      color: #263238;
-    }
-
-    .prize {
+    .result-label {
       font-size: 1rem;
+      color: #546e7a;
+      margin-bottom: 8px;
+    }
+
+    .result-character {
+      font-size: 2.2rem;
+      font-weight: bold;
       color: #2e7d32;
-      font-weight: 600;
+      margin: 5px 0;
+    }
+
+    .result-num {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 10px;
+    }
+
+    .loading {
+      display: none;
+      margin-top: 20px;
+      color: #78909c;
+      font-size: 0.95rem;
+    }
+
+    .error {
+      display: none;
+      margin-top: 25px;
+      padding: 20px;
+      background: #fff3e0;
+      border-radius: 12px;
+      border-left: 4px solid #ff9800;
+      color: #e65100;
+      font-size: 1rem;
     }
 
     .hint {
-      margin-top: 20px;
-      color: #78909c;
-      font-size: 0.85rem;
+      margin-top: 25px;
+      color: #90a4ae;
+      font-size: 0.8rem;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>🎲 Рандомайзер</h1>
-    <p class="subtitle">Нажми кнопку, чтобы разыграть варианты между участниками</p>
+    <h1>🎁 Тайный Санта</h1>
+    <p class="subtitle">Нажми кнопку, чтобы узнать своего персонажа</p>
 
-    <button class="btn" onclick="runRandomizer()">Разыграть!</button>
+    <button class="btn" id="drawBtn" onclick="drawCharacter()">Мне выпадет…</button>
 
-    <div class="results" id="results"></div>
+    <div class="loading" id="loading">Подбираем персонажа…</div>
 
-    <p class="hint">Результаты генерируются случайно. Обнови страницу, чтобы запустить заново.</p>
+    <div class="result" id="result">
+      <p class="result-label">Тебе достался:</p>
+      <div class="result-character" id="characterName">—</div>
+      <div class="result-num" id="resultNum"></div>
+    </div>
+
+    <div class="error" id="error"></div>
+
+    <p class="hint">Персонажи распределяются случайным образом и не повторяются.</p>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <script>
-    // === ДАННЫЕ — РЕДАКТИРУЙ ПОД СЕБЯ ===
-    const people = [
-      "Маша", "Юля", "Ксюша Ч", "Даша",
-      "Ксюша Н", "Настя"
+    // === ВСТАВЬ СВОЙ КОНФИГ ИЗ FIREBASE ===
+    const firebaseConfig = {
+  apiKey: "AIzaSyAe3TZyDMG4JvS_ccGy3VxduQgCEpCTDA8",
+  authDomain: "smesharik-857ae.firebaseapp.com",
+  projectId: "smesharik-857ae",
+  storageBucket: "smesharik-857ae.firebasestorage.app",
+  messagingSenderId: "165009269489",
+  appId: "1:165009269489:web:d9d443311515451826bf50"
+};
+
+
+    // Инициализация Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // === НАСТРОЙКИ ===
+    const characters = [
+      "Крош", "Ёжик", "Нюша", "Бараш",
+      "Лосяш", "Пин", "Копатыч", "Совунья", "Кар-Карыч"
     ];
 
-    const prizes = [
-      "Нюша",
-      "Крош",
-      "Ёжик",
-      "Савунья",
-"Копатыч",
-"Каркарыч",
-"Пин",
-"Бараш",
-"Лосяш",
-    ];
+    const maxPeople = 6; // сколько человек могут получить персонажа
 
-    // === ЛОГИКА РАНДОМАЙЗЕРА ===
-    function shuffle(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+    // === ЛОГИКА ===
+    let alreadyAssigned = false;
+
+    // Проверяем при загрузке, не получал ли этот браузер уже персонажа
+    window.addEventListener('load', () => {
+      const saved = localStorage.getItem('santa_assigned');
+      if (saved) {
+        const data = JSON.parse(saved);
+        showResult(data.character, data.num);
+        alreadyAssigned = true;
+        document.getElementById('drawBtn').disabled = true;
+        document.getElementById('drawBtn').textContent = 'Ты уже получил персонажа';
       }
-      return arr;
+    });
+
+    function showResult(character, num) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('characterName').textContent = character;
+      document.getElementById('resultNum').textContent =
+        `Ты — человек №${num} из ${maxPeople}`;
     }
 
-    function runRandomizer() {
-      const shuffledPrizes = shuffle(prizes);
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "";
-      resultsDiv.style.display = "block";
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').textContent = msg;
+    }
 
-      people.forEach((name, i) => {
-        const prize = shuffledPrizes[i % shuffledPrizes.length];
-        const row = document.createElement("div");
-        row.className = "result-row";
-        row.innerHTML = `
-          <span class="num">${i + 1}</span>
-          <span class="name">${name}</span>
-          <span class="prize">${prize}</span>
-        `;
-        resultsDiv.appendChild(row);
+    function drawCharacter() {
+      if (alreadyAssigned) return;
+
+      const btn = document.getElementById('drawBtn');
+      btn.disabled = true;
+      document.getElementById('loading').style.display = 'block';
+
+      // Читаем текущее состояние из базы
+      db.ref('assignments').transaction((data) => {
+        if (data === null) data = { count: 0, taken: {} };
+
+        // Проверяем, не все ли места заняты
+        if (data.count >= maxPeople) {
+          return; // отменяем транзакцию — вернёт текущие данные
+        }
+
+        // Собираем занятые персонажи
+        const takenChars = [];
+        if (data.taken) {
+          for (const key in data.taken) {
+            takenChars.push(data.taken[key]);
+          }
+        }
+
+        // Находим свободных
+        const available = characters.filter(c => !takenChars.includes(c));
+        if (available.length === 0) {
+          return; // нечего раздавать
+        }
+
+        // Выбираем случайного
+        const randomIndex = Math.floor(Math.random() * available.length);
+        const chosen = available[randomIndex];
+
+        // Записываем в базу
+        const newCount = data.count + 1;
+        const newKey = 'p' + newCount;
+        if (!data.taken) data.taken = {};
+        data.taken[newKey] = chosen;
+        data.count = newCount;
+
+        // Сохраняем локально, чтобы при обновлении страницы
+        // человек видел того же персонажа
+        localStorage.setItem('santa_assigned', JSON.stringify({
+          character: chosen,
+          num: newCount
+        }));
+
+        // Показываем результат
+        showResult(chosen, newCount);
+        document.getElementById('drawBtn').textContent = 'Готово!';
+
+        return data; // коммитим транзакцию
+      }).then((result) => {
+        if (!result.committed) {
+          // Транзакция не закоммичена — значит, мест больше нет
+          db.ref('assignments/count').once('value').then((snap) => {
+            const count = snap.val() || 0;
+            if (count >= maxPeople) {
+              showError('Увы, все места уже заняты! 🙁');
+            } else {
+              showError('Что-то пошло не так. Попробуй обновить страницу и нажать ещё раз.');
+            }
+            btn.disabled = false;
+          });
+        }
+      }).catch((err) => {
+        showError('Ошибка соединения. Проверь интернет и попробуй снова.');
+        btn.disabled = false;
       });
     }
   </script>
